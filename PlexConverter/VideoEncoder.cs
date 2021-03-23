@@ -17,7 +17,6 @@ namespace PlexConverter
         }
         public IVideoStream Encode()
         {
-            var nvenccPath = Path.Combine(Environment.CurrentDirectory, ".tools", "nvencc");
             var tempDir = Path.Combine(Path.GetDirectoryName(_videoStream.Path), ".temp");
             Directory.CreateDirectory(tempDir);
             var outputPath = Path.Combine(tempDir, "0-video.h265");
@@ -25,7 +24,7 @@ namespace PlexConverter
             if(checker.NeedsProcessing)
             {
                 var encoderInfo = new ProcessStartInfo();
-                encoderInfo.FileName = @$"{nvenccPath}\NVEncC64.exe";
+                encoderInfo.FileName = ToolsConfig.NVEncCPath;
                 // --dhdr10-info copy
                 encoderInfo.Arguments = @$"--avhw --input {_videoStream.Path} --output-res {checker.Resolution}x-2 --sar 1:1 --vpp-resize lanczos --fps {checker.Framerate} --avsync cfr --codec h265 --profile main --level 5.1 --tier high --vbrhq {checker.Bitrate} --preset quality --output-depth 8 --max-bitrate {checker.Bitrate + (checker.Bitrate / 3)} --qp-init 1 --vbr-quality 1 --lookahead 32 --gop-len {(int)checker.Framerate * 10} --bframes 3 --ref 3 --weightp --nonrefp --bref-mode middle --aq --aq-temporal --mv-precision Q-pel --colorrange auto --colormatrix auto --colorprim auto --transfer auto --chromaloc auto --max-cll copy --master-display copy --atc-sei auto --aud --pic-struct --output {outputPath}";
                 try

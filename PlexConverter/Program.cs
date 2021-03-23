@@ -21,7 +21,8 @@ namespace PlexConverter
             var muxer = new Muxer(mediaFile);
             muxer.MuxerType = outputContainer;
             muxer.Convert();
-            Console.WriteLine(RuntimeInformation.OSDescription);
+            Console.WriteLine(ToolsConfig.FFmpegPath);
+            Console.WriteLine(ToolsConfig.NVEncCPath);
             DisplayWriter.DisplayMessage("Press any key to exit ...", ConsoleColor.Green);
             Console.ReadKey();
         }

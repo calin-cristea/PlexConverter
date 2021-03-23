@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Xabe.FFmpeg;
 
 namespace PlexConverter
 {
@@ -17,32 +18,44 @@ namespace PlexConverter
             Console.WriteLine($" {message}");
             Console.ResetColor();
         }
-        public static void DisplayInfo(MediaFile mediaInfo)
+        public static void DisplayInfo(MediaFile mediaFile)
         {
-            DisplayMessage(mediaInfo.MediaPath);
+            DisplayMessage(mediaFile.MediaPath);
             DisplayMessage(" INFO:", ConsoleColor.Green);
             DisplayMessage("Container:", ConsoleColor.Yellow);
-            DisplayMessage($"   format:     {mediaInfo.MediaContainer}");
-            DisplayMessage("Video:", ConsoleColor.Yellow);
-            DisplayMessage($"   codec:      {mediaInfo.VideoStreams.First().Codec}");
-            DisplayMessage($"   resolution: {mediaInfo.VideoStreams.First().Width}x{mediaInfo.VideoStreams.First().Height}");
-            DisplayMessage($"   framerate:  {mediaInfo.VideoStreams.First().Framerate}");
-            DisplayMessage($"   bitrate:    {mediaInfo.VideoStreams.First().Bitrate / 1000} kbps");
-            for (int i = 0; i < mediaInfo.AudioStreams.Count(); i++)
+            DisplayMessage($"   format:     {mediaFile.MediaContainer}");
+            DisplayVideoInfo(mediaFile.VideoStreams.First());
+            for (int i = 0; i < mediaFile.AudioStreams.Count(); i++)
             {
                 DisplayMessage($"Audio {i + 1}:", ConsoleColor.Yellow);
-                DisplayMessage($"   codec:      {mediaInfo.AudioStreams.ElementAt(i).Codec}");
-                DisplayMessage($"   lang:       {mediaInfo.AudioStreams.ElementAt(i).Language}");
-                DisplayMessage($"   channels:   {mediaInfo.AudioStreams.ElementAt(i).Channels}");
-                DisplayMessage($"   samplerate: {mediaInfo.AudioStreams.ElementAt(i).SampleRate} Hz");
-                DisplayMessage($"   bitrate:    {mediaInfo.AudioStreams.ElementAt(i).Bitrate / 1000} kbps");
+                DisplayAudioInfo(mediaFile.AudioStreams.ElementAt(i));
             }
-            for (int i = 0; i < mediaInfo.SubtitleStreams.Count(); i++)
+            for (int i = 0; i < mediaFile.SubtitleStreams.Count(); i++)
             {
                 DisplayMessage($"Subtitle {i + 1}:", ConsoleColor.Yellow);
-                DisplayMessage($"   codec:      {mediaInfo.SubtitleStreams.ElementAt(i).Codec}");
-                DisplayMessage($"   lang:       {mediaInfo.SubtitleStreams.ElementAt(i).Language}");
+                DisplaySubtitleInfo(mediaFile.SubtitleStreams.ElementAt(i));
             }
+        }
+        private static void DisplayVideoInfo(IVideoStream videoStream)
+        {
+            DisplayMessage("Video:", ConsoleColor.Yellow);
+            DisplayMessage($"   codec:      {videoStream.Codec}");
+            DisplayMessage($"   resolution: {videoStream.Width}x{videoStream.Height}");
+            DisplayMessage($"   framerate:  {videoStream.Framerate}");
+            DisplayMessage($"   bitrate:    {videoStream.Bitrate / 1000} kbps");
+        }
+        private static void DisplayAudioInfo(IAudioStream audioStream)
+        {
+            DisplayMessage($"   codec:      {audioStream.Codec}");
+            DisplayMessage($"   lang:       {audioStream.Language}");
+            DisplayMessage($"   channels:   {audioStream.Channels}");
+            DisplayMessage($"   samplerate: {audioStream.SampleRate} Hz");
+            DisplayMessage($"   bitrate:    {audioStream.Bitrate / 1000} kbps");
+        }
+        private static void DisplaySubtitleInfo(ISubtitleStream subtitleStream)
+        {
+            DisplayMessage($"   codec:      {subtitleStream.Codec}");
+            DisplayMessage($"   lang:       {subtitleStream.Language}");
         }
     }
 }

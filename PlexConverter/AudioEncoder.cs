@@ -27,7 +27,7 @@ namespace PlexConverter
             if (checker.NeedsProcessing)
             {
                 var encoderInfo = new ProcessStartInfo();
-                encoderInfo.FileName = @$"{Path.Combine(Environment.CurrentDirectory, "FFmpeg")}\ffmpeg";
+                encoderInfo.FileName = ToolsConfig.FFmpegPath;
                 encoderInfo.Arguments = @$"-i {_stream.Path} -map 0:{_stream.Index} -codec:a aac -b:a 256k -ac 2 -ar {_stream.SampleRate} {outputPath}";
                 try
                 {
@@ -40,19 +40,6 @@ namespace PlexConverter
                 {
                     // errors
                 }
-                //var encoder = FFmpeg.Conversions.New();
-                //encoder.AddStream(_stream);
-                //encoder.SetOutputFormat("aac");
-                //encoder.SetOutput(outputPathAAC);
-                //_stream.SetCodec(AudioCodec.aac);
-                //_stream.SetBitrate(256000);
-                //_stream.SetChannels(2);
-                //_stream.SetSampleRate(_stream.SampleRate);
-                //encoder.OnProgress += async (sender, args) =>
-                //{
-                //    if (args.Percent % 25 == 0) await Console.Out.WriteLineAsync($"[{args.Percent}%]");
-                //};
-                //encoder.Start().Wait();
                 var newMediaFile = new MediaFile(outputPath);
                 return newMediaFile.AudioStreams.First();
             }

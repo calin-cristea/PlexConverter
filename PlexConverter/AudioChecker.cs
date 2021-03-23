@@ -8,7 +8,7 @@ namespace PlexConverter
 {
     public class AudioChecker : IChecker
     {
-        private readonly string[] _audioCodecs = { "aac", "eac3" };
+        private readonly string[] _audioCodecs = { "aac", "eac3", "ac3" };
         private IAudioStream _stream;
         private bool _needsProcessing;
 

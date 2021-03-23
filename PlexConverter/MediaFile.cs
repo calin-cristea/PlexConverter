@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using Xabe.FFmpeg;
-using Xabe.FFmpeg.Downloader;
 
 namespace PlexConverter
 {
@@ -17,10 +13,7 @@ namespace PlexConverter
         public IEnumerable<ISubtitleStream> SubtitleStreams { get; }
         public MediaFile(string path)
         {
-            var ffmpegPath = Path.Combine(Environment.CurrentDirectory, "FFmpeg");
-            if(!Directory.Exists(ffmpegPath)) Directory.CreateDirectory(ffmpegPath);
-            FFmpeg.SetExecutablesPath(ffmpegPath);
-            FFmpegDownloader.GetLatestVersion(FFmpegVersion.Official, ffmpegPath).Wait();
+            FFmpeg.SetExecutablesPath(Path.GetDirectoryName(ToolsConfig.FFmpegPath));
             MediaPath = path;
             MediaContainer = Path.GetExtension(path).TrimStart('.');
             VideoStreams = FFmpeg.GetMediaInfo(path).Result.VideoStreams;
