@@ -28,7 +28,7 @@ namespace PlexConverter
             {
                 var encoderInfo = new ProcessStartInfo();
                 encoderInfo.FileName = ToolsConfig.FFmpegPath;
-                encoderInfo.Arguments = @$"-i {_stream.Path} -map 0:{_stream.Index} -codec:a aac -b:a 256k -ac 2 -ar {_stream.SampleRate} {outputPath}";
+                encoderInfo.Arguments = $@"-i ""{_stream.Path}"" -map 0:{_stream.Index} -codec:a aac -b:a 256k -ac 2 -ar {_stream.SampleRate} ""{outputPath}""";
                 try
                 {
                     using (Process encoder = Process.Start(encoderInfo))

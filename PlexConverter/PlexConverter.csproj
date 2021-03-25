@@ -1,11 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Authors>Calin CRISTEA</Authors>
+    <Company>CRISTEA-NET</Company>
+    <Description>Convert any video file to an optimized for Plex Media Server version.</Description>
+    <PackageIcon></PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediaInfo.Native" Version="20.9.1" />
     <PackageReference Include="Xabe.FFmpeg" Version="4.4.0" />
   </ItemGroup>
 
