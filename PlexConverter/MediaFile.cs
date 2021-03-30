@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using MediaInfo;
+using MediaInfo.Model;
+using System.Collections.Generic;
 using System.IO;
-using Xabe.FFmpeg;
+using System.Linq;
 
 namespace PlexConverter
 {
@@ -8,17 +10,17 @@ namespace PlexConverter
     {
         public string MediaPath { get; }
         public string MediaContainer { get; }
-        public IEnumerable<IVideoStream> VideoStreams { get; }
-        public IEnumerable<IAudioStream> AudioStreams { get; }
-        public IEnumerable<ISubtitleStream> SubtitleStreams { get; }
+        public IList<VideoStream> VideoStreams { get; }
+        public IList<AudioStream> AudioStreams { get; }
+        public IList<SubtitleStream> SubtitleStreams { get; }
         public MediaFile(string path)
         {
-            FFmpeg.SetExecutablesPath(Path.GetDirectoryName(ToolsConfig.FFmpegPath));
+            var mediaInfo = new MediaInfoWrapper(path);
             MediaPath = path;
             MediaContainer = Path.GetExtension(path).TrimStart('.');
-            VideoStreams = FFmpeg.GetMediaInfo(path).Result.VideoStreams;
-            AudioStreams = FFmpeg.GetMediaInfo(path).Result.AudioStreams;
-            SubtitleStreams = FFmpeg.GetMediaInfo(path).Result.SubtitleStreams;
+            VideoStreams = mediaInfo.VideoStreams;
+            AudioStreams = mediaInfo.AudioStreams;
+            SubtitleStreams = mediaInfo.Subtitles;
         }
     }
 }

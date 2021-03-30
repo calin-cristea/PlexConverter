@@ -1,8 +1,8 @@
-﻿using System;
+﻿using MediaInfo.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Xabe.FFmpeg;
 
 namespace PlexConverter
 {
@@ -36,23 +36,23 @@ namespace PlexConverter
                 DisplaySubtitleInfo(mediaFile.SubtitleStreams.ElementAt(i));
             }
         }
-        private static void DisplayVideoInfo(IVideoStream videoStream)
+        private static void DisplayVideoInfo(VideoStream videoStream)
         {
             DisplayMessage("Video:", ConsoleColor.Yellow);
-            DisplayMessage($"   codec:      {videoStream.Codec}");
+            DisplayMessage($"   codec:      {videoStream.Format}");
             DisplayMessage($"   resolution: {videoStream.Width}x{videoStream.Height}");
-            DisplayMessage($"   framerate:  {videoStream.Framerate}");
-            DisplayMessage($"   bitrate:    {videoStream.Bitrate / 1000} kbps");
+            DisplayMessage($"   framerate:  {videoStream.FrameRate}");
+            DisplayMessage($"   bitrate:    {(int)(videoStream.Bitrate / 1000)} kbps");
         }
-        private static void DisplayAudioInfo(IAudioStream audioStream)
+        private static void DisplayAudioInfo(AudioStream audioStream)
         {
             DisplayMessage($"   codec:      {audioStream.Codec}");
             DisplayMessage($"   lang:       {audioStream.Language}");
-            DisplayMessage($"   channels:   {audioStream.Channels}");
-            DisplayMessage($"   samplerate: {audioStream.SampleRate} Hz");
-            DisplayMessage($"   bitrate:    {audioStream.Bitrate / 1000} kbps");
+            DisplayMessage($"   channels:   {audioStream.AudioChannelsFriendly}");
+            DisplayMessage($"   samplerate: {audioStream.SamplingRate} Hz");
+            DisplayMessage($"   bitrate:    {(int)(audioStream.Bitrate / 1000)} kbps");
         }
-        private static void DisplaySubtitleInfo(ISubtitleStream subtitleStream)
+        private static void DisplaySubtitleInfo(MediaInfo.Model.SubtitleStream subtitleStream)
         {
             DisplayMessage($"   codec:      {subtitleStream.Codec}");
             DisplayMessage($"   lang:       {subtitleStream.Language}");

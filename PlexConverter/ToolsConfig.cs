@@ -8,6 +8,7 @@ namespace PlexConverter
 {
     public static class ToolsConfig
     {
+        public static string TempPath { get; set; }
         public static string FFmpegPath { get => GetPath("ffmpeg"); }
         public static string NVEncCPath { get => GetPath("NVEncC64"); }
         public static string Mp4boxPath { get => GetPath("mp4box"); }

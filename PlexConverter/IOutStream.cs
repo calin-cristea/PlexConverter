@@ -4,8 +4,9 @@ using System.Text;
 
 namespace PlexConverter
 {
-    public interface IChecker
+    public interface IOutStream
     {
-        bool NeedsProcessing { get; }
+        string StreamPath { get; }
+        int ID { get; }
     }
 }

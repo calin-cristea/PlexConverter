@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MediaInfo;
+using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -13,6 +14,7 @@ namespace PlexConverter
             string outputContainer;
             if (args.Length == 2) outputContainer = args[1].TrimStart('-');
             else outputContainer = "mp4";
+            ToolsConfig.TempPath = Path.Combine(Path.GetDirectoryName(inputPath), ".temp");
 
             var mediaFile = new MediaFile(inputPath);
 
