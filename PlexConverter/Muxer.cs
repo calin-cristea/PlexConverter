@@ -38,7 +38,7 @@ namespace PlexConverter
             foreach (AudioStream audioStream in _mediaFile.AudioStreams)
             {
                 var outAudioStream = new OutAudioStream(audioStream, _mediaFile.MediaPath);
-                muxerInfo.Arguments += $@" -add ""{outAudioStream.StreamPath}""#{outAudioStream.ID}:hdlr=soun:name=AudioHandler:group=1";
+                muxerInfo.Arguments += $@" -add ""{outAudioStream.StreamPath}""#{outAudioStream.ID}:hdlr=soun:name=AudioHandler:lang={outAudioStream.Lang}:group=1";
                 if(audioStream.Id != 1)
                 {
                     muxerInfo.Arguments += $@":disable";
@@ -48,13 +48,13 @@ namespace PlexConverter
             {
                 var outSubtitleStream = new OutSubtitleStream(subtitleStream, _mediaFile.MediaPath);
                 var handler = outSubtitleStream.Codec == SubtitleCodec.Vobsub ? "subp" : "sbtl";
-                muxerInfo.Arguments += $@" -add ""{outSubtitleStream.StreamPath}""#{outSubtitleStream.ID}:hdlr={handler}:name=SubtitleHandler:lang={subtitleStream.Language}:group=2";
+                muxerInfo.Arguments += $@" -add ""{outSubtitleStream.StreamPath}""#{outSubtitleStream.ID}:hdlr={handler}:name=SubtitleHandler:lang={outSubtitleStream.Lang}:group=2";
                 if (subtitleStream.Id != 1)
                 {
                     muxerInfo.Arguments += $@":disable";
                 }
             }
-            muxerInfo.Arguments += $@" ""{outputPath}""";
+            muxerInfo.Arguments += $@" -fps {outVideoStream.Framerate} ""{outputPath}""";
             try
             {
                 using (Process muxer = Process.Start(muxerInfo))

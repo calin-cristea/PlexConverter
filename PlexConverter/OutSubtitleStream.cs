@@ -19,7 +19,7 @@ namespace PlexConverter
         public SubtitleCodec Codec { get => _stream.Codec; }
         public string StreamPath { get => _streamPath; }
         public int ID { get => _streamID; }
-        public string Lang { get => _stream.Language; }
+        public string Lang { get => LanguageMirror.GetCode(_stream.Language); }
         public OutSubtitleStream(SubtitleStream subtitleStream, string path)
         {
             _stream = subtitleStream;

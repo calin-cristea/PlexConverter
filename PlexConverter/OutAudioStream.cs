@@ -20,7 +20,7 @@ namespace PlexConverter
         private int _bitrate;
         public string StreamPath { get => _streamPath; }
         public int ID { get => _streamID; }
-        public string Lang { get => _stream.Language; }
+        public string Lang { get => LanguageMirror.GetCode(_stream.Language); }
         public OutAudioStream(AudioStream audioStream, string path)
         {
             _stream = audioStream;
