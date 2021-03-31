@@ -10,8 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediaInfo.Wrapper.Core" Version="20.9.2" />
-    <PackageReference Include="Xabe.FFmpeg" Version="4.4.0" />
+    <PackageReference Include="MediaInfo.Wrapper.Core" Version="21.3.0" />
   </ItemGroup>
 
 </Project>

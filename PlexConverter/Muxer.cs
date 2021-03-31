@@ -34,12 +34,12 @@ namespace PlexConverter
             var outVideoStream = new OutVideoStream(_mediaFile.VideoStreams.First(), _mediaFile.MediaPath);
             var muxerInfo = new ProcessStartInfo();
             muxerInfo.FileName = ToolsConfig.Mp4boxPath;
-            muxerInfo.Arguments = $@"-add ""{outVideoStream.StreamPath}""#video:hdlr=vide:name=VideoHandler";
+            muxerInfo.Arguments = $@"-add ""{outVideoStream.StreamPath}""#{outVideoStream.ID + 1}:hdlr=vide:name=VideoHandler";
             foreach (AudioStream audioStream in _mediaFile.AudioStreams)
             {
                 var outAudioStream = new OutAudioStream(audioStream, _mediaFile.MediaPath);
-                muxerInfo.Arguments += $@" -add ""{outAudioStream.StreamPath}""#{outAudioStream.ID}:hdlr=soun:name=AudioHandler:lang={outAudioStream.Lang}:group=1";
-                if(audioStream.Id != 1)
+                muxerInfo.Arguments += $@" -add ""{outAudioStream.StreamPath}""#{outAudioStream.ID + 1}:hdlr=soun:name=AudioHandler:lang={outAudioStream.Lang}:group=1";
+                if(!outAudioStream.IsDefault)
                 {
                     muxerInfo.Arguments += $@":disable";
                 }
@@ -48,11 +48,7 @@ namespace PlexConverter
             {
                 var outSubtitleStream = new OutSubtitleStream(subtitleStream, _mediaFile.MediaPath);
                 var handler = outSubtitleStream.Codec == SubtitleCodec.Vobsub ? "subp" : "sbtl";
-                muxerInfo.Arguments += $@" -add ""{outSubtitleStream.StreamPath}""#{outSubtitleStream.ID}:hdlr={handler}:name=SubtitleHandler:lang={outSubtitleStream.Lang}:group=2";
-                if (subtitleStream.Id != 1)
-                {
-                    muxerInfo.Arguments += $@":disable";
-                }
+                muxerInfo.Arguments += $@" -add ""{outSubtitleStream.StreamPath}""#{outSubtitleStream.ID + 1}:hdlr={handler}:name=SubtitleHandler:lang={outSubtitleStream.Lang}:group=2:disable";
             }
             muxerInfo.Arguments += $@" -fps {outVideoStream.Framerate} ""{outputPath}""";
             try
@@ -69,31 +65,39 @@ namespace PlexConverter
         }
         private void ConvertToMatroska()
         {
-            //    var outputPath = Path.Combine(Path.GetDirectoryName(_mediaFile.MediaPath), $"{Path.GetFileNameWithoutExtension(_mediaFile.MediaPath)}-new.mkv");
-            //    File.Delete(outputPath);
-            //    var convert = FFmpeg.Conversions.New();
-            //    convert.SetOutputFormat(Format.matroska);
-            //    convert.SetOutput(outputPath);
-            //    convert.SetVideoSyncMethod(VideoSyncMethod.cfr);
-            //    var videoEncodedStream = new VideoEncoder(_mediaFile.VideoStreams.First()).Encode();
-            //    videoEncodedStream.SetCodec(VideoCodec.copy);
-            //    convert.AddStream(videoEncodedStream);
-            //    foreach (IAudioStream audioStream in _mediaFile.AudioStreams)
-            //    {
-            //        var audioEncodedStream = new AudioEncoder(audioStream).Encode();
-            //        audioEncodedStream.SetCodec(AudioCodec.copy);
-            //        convert.AddStream(audioEncodedStream);
-            //    }
-            //    foreach (ISubtitleStream subtitleStream in _mediaFile.SubtitleStreams)
-            //    {
-            //        subtitleStream.SetCodec(Xabe.FFmpeg.Streams.SubtitleStream.SubtitleCodec.copy);
-            //        convert.AddStream(subtitleStream);
-            //    }
-            //    convert.OnProgress += async (sender, args) =>
-            //    {
-            //        if (args.Percent % 25 == 0) await Console.Out.WriteLineAsync($"[{args.Percent}%]");
-            //    };
-            //    convert.Start().Wait();
+            var outputPath = Path.Combine(Path.GetDirectoryName(_mediaFile.MediaPath), $"{Path.GetFileNameWithoutExtension(_mediaFile.MediaPath)}-new.mkv");
+            File.Delete(outputPath);
+            var muxerInfo = new ProcessStartInfo();
+            muxerInfo.FileName = ToolsConfig.MkvMergePath;
+            muxerInfo.Arguments = $@"-o ""{outputPath}""";
+            var outVideoStream = new OutVideoStream(_mediaFile.VideoStreams.First(), _mediaFile.MediaPath);
+            muxerInfo.Arguments += $@" --video-tracks {outVideoStream.ID} --no-audio --no-subtitles --no-buttons --no-track-tags --no-chapters --no-attachments --no-global-tags ""{outVideoStream.StreamPath}""";
+            foreach (AudioStream audioStream in _mediaFile.AudioStreams)
+            {
+                var outAudioStream = new OutAudioStream(audioStream, _mediaFile.MediaPath);
+                muxerInfo.Arguments += $@" --audio-tracks {outAudioStream.ID} --language {outAudioStream.ID}:{outAudioStream.Lang}";
+                if (outAudioStream.IsDefault)
+                {
+                    muxerInfo.Arguments += $@" --default-track {outAudioStream.ID}:1";
+                }
+                muxerInfo.Arguments += $@" --no-video --no-subtitles --no-buttons --no-track-tags --no-chapters --no-attachments --no-global-tags ""{outAudioStream.StreamPath}""";
+            }
+            foreach (SubtitleStream subtitleStream in _mediaFile.SubtitleStreams)
+            {
+                var outSubtitleStream = new OutSubtitleStream(subtitleStream, _mediaFile.MediaPath);
+                muxerInfo.Arguments += $@" --subtitle-tracks {outSubtitleStream.ID} --language {outSubtitleStream.ID}:{outSubtitleStream.Lang} --default-track {outSubtitleStream.ID}:0 --no-video --no-audio --no-buttons --no-track-tags --no-chapters --no-attachments --no-global-tags ""{outSubtitleStream.StreamPath}""";
+            }
+            try
+            {
+                using (Process muxer = Process.Start(muxerInfo))
+                {
+                    muxer.WaitForExit();
+                }
+            }
+            catch
+            {
+                // errors
+            }
         }
     }
 }

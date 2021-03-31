@@ -21,11 +21,12 @@ namespace PlexConverter
         public string StreamPath { get => _streamPath; }
         public int ID { get => _streamID; }
         public string Lang { get => LanguageMirror.GetCode(_stream.Language); }
+        public bool IsDefault { get => _stream.StreamNumber == 1 ? true : false; }
         public OutAudioStream(AudioStream audioStream, string path)
         {
             _stream = audioStream;
             _streamPath = path;
-            _streamID = _stream.Id;
+            _streamID = _stream.StreamNumber;
             _needsProcessing = !_audioCodecs.Contains(_stream.Codec);
             _codec = CheckCodec();
             _channels = CheckChannels();
@@ -71,7 +72,7 @@ namespace PlexConverter
                     // errors
                 }
                 _streamPath = outputPath;
-                _streamID = 1;
+                _streamID = 0;
 
             }
         }

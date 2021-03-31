@@ -2,7 +2,7 @@
   "profiles": {
     "PlexConverter": {
       "commandName": "Project",
-      "commandLineArgs": "\"c:\\Users\\calin\\Downloads\\plex\\Metropolis.1927.1080p.BluRay.FLAC.x264.RoSubbed-HaB.mkv\" -mp4"
+      "commandLineArgs": "\"c:\\Users\\calin\\Downloads\\plex\\Metropolis.1927.1080p.BluRay.FLAC.x264.RoSubbed-HaB.mkv\" -mkv"
     }
   }
 }

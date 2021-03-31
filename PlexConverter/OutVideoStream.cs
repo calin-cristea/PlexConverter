@@ -13,16 +13,18 @@ namespace PlexConverter
         private readonly VideoCodec[] _videoCodecs = { VideoCodec.Mpeg4IsoAvc, VideoCodec.MpeghIsoHevc };
         private VideoStream _stream;
         private string _streamPath;
+        private int _streamID;
         private bool _needsProcessing;
         private int _resolution;
         private int _bitrate;
         public string StreamPath { get => _streamPath; }
-        public int ID { get => _stream.Id; }
+        public int ID { get => _streamID; }
         public double Framerate { get => _stream.FrameRate; }
         public OutVideoStream(VideoStream videoStream, string path)
         {
             _stream = videoStream;
             _streamPath = path;
+            _streamID = _stream.StreamNumber;
             _needsProcessing = !_videoCodecs.Contains(_stream.Codec);
             _resolution = CheckResolution();
             _bitrate = CheckBitrate();
@@ -101,6 +103,7 @@ namespace PlexConverter
                     // errors
                 }
                 _streamPath = outputPath;
+                _streamID = 0;
             }
         }
     }

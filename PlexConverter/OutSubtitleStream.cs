@@ -24,7 +24,7 @@ namespace PlexConverter
         {
             _stream = subtitleStream;
             _streamPath = path;
-            _streamID = _stream.Id;
+            _streamID = _stream.StreamNumber;
             _needsProcessing = !_subtitleCodecs.Contains(_stream.Codec);
             Encode();
         }
@@ -54,7 +54,7 @@ namespace PlexConverter
                 // errors
             }
             _streamPath = outputPath;
-            _streamID = 1;
+            _streamID = 0;
         }
     }
 }
