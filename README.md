@@ -8,5 +8,6 @@ PlexConverter provides a straightforward command line tool for handling media fo
 * `ffmpeg` (and `ffprobe`) [installed](https://ffmpeg.org/download.html) and available in `PATH`
 * `nvencc` [installed](https://github.com/rigaya/NVEnc/releases) and available in `PATH`
 * `mp4box` [installed](https://gpac.wp.imt.fr/downloads/) and available in `PATH` (for MP4 output)
+* `mkvtoolnix` [installed](https://mkvtoolnix.download/downloads.html) and available in `PATH` (for matroska output)
 ## Usage
 `PlexConverter "/path/to/media.ext" [-mkv]`
