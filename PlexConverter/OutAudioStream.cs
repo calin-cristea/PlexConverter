@@ -1,16 +1,13 @@
 ﻿using MediaInfo.Model;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace PlexConverter
 {
     public class OutAudioStream : IOutStream
     {
-        private readonly AudioCodec[] _audioCodecs = { AudioCodec.Aac, AudioCodec.Eac3, AudioCodec.Ac3 };
+        private readonly AudioCodec[] _audioCodecs = { AudioCodec.AacMpeg4Lc, AudioCodec.Eac3, AudioCodec.Ac3 };
         private AudioStream _stream;
         private string _streamPath;
         private int _streamID;
@@ -51,26 +48,16 @@ namespace PlexConverter
         }
         private void Encode()
         {
-            Directory.CreateDirectory(ToolsConfig.TempPath);
-            var outputPath = Path.Combine(ToolsConfig.TempPath, $"{_stream.StreamNumber}-audio.mp4");
-            var outputPathAAC = Path.Combine(ToolsConfig.TempPath, $"{ID}-audio.aac");
-            var outputPathDDP = Path.Combine(ToolsConfig.TempPath, $"{ID}-audio.ec3");
             if (_needsProcessing)
             {
-                var encoderInfo = new ProcessStartInfo();
-                encoderInfo.FileName = ToolsConfig.FFmpegPath;
-                encoderInfo.Arguments = $@"-i ""{_streamPath}"" -map 0:{_stream.StreamNumber} -codec:a {_codec} -b:a {_bitrate}k -ac {_channels} -ar {_stream.SamplingRate} ""{outputPath}""";
-                try
-                {
-                    using (Process encoder = Process.Start(encoderInfo))
-                    {
-                        encoder.WaitForExit();
-                    }
-                }
-                catch
-                {
-                    // errors
-                }
+                Directory.CreateDirectory(ToolsConfig.TempPath);
+                var outputPath = Path.Combine(ToolsConfig.TempPath, $"{_stream.StreamNumber}-audio.mp4");
+                var outputPathAAC = Path.Combine(ToolsConfig.TempPath, $"{ID}-audio.aac");
+                var outputPathDDP = Path.Combine(ToolsConfig.TempPath, $"{ID}-audio.ec3");
+                var encoder = new Converter();
+                encoder.Path = ToolsConfig.FFmpegPath;
+                encoder.Args = $@"-i ""{_streamPath}"" -map 0:{_stream.StreamNumber} -codec:a {_codec} -b:a {_bitrate}k -ac {_channels} -ar {_stream.SamplingRate} ""{outputPath}""";
+                encoder.Convert(true, $"Processing audio {_stream.StreamPosition}...");
                 _streamPath = outputPath;
                 _streamID = 0;
 

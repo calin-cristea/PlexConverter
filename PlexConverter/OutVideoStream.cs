@@ -1,10 +1,7 @@
 ﻿using MediaInfo.Model;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace PlexConverter
 {
@@ -83,25 +80,15 @@ namespace PlexConverter
         }
         private void Encode()
         {
-            Directory.CreateDirectory(ToolsConfig.TempPath);
-            var outputPath = Path.Combine(ToolsConfig.TempPath, "0-video.h265");
             if (_needsProcessing)
             {
-                var encoderInfo = new ProcessStartInfo();
-                encoderInfo.FileName = ToolsConfig.NVEncCPath;
+                Directory.CreateDirectory(ToolsConfig.TempPath);
+                var outputPath = Path.Combine(ToolsConfig.TempPath, "0-video.h265");
+                var encoder = new Converter();
+                encoder.Path = ToolsConfig.NVEncCPath;
                 // --dhdr10-info copy
-                encoderInfo.Arguments = $@"--avhw --input ""{StreamPath}"" --output-res {_resolution}x-2 --sar 1:1 --vpp-resize lanczos --fps {_stream.FrameRate} --avsync forcecfr --codec h265 --profile main --level 5.1 --tier high --vbrhq {_bitrate} --preset quality --output-depth 8 --max-bitrate {_bitrate + (_bitrate / 3)} --qp-init 1 --vbr-quality 1 --lookahead 32 --gop-len {_stream.FrameRate * 10} --bframes 3 --ref 3 --weightp --nonrefp --bref-mode middle --aq --aq-temporal --mv-precision Q-pel --colorrange auto --colormatrix auto --colorprim auto --transfer auto --chromaloc auto --max-cll copy --master-display copy --atc-sei auto --aud --pic-struct --output ""{outputPath}""";
-                try
-                {
-                    using (Process encoder = Process.Start(encoderInfo))
-                    {
-                        encoder.WaitForExit();
-                    }
-                }
-                catch
-                {
-                    // errors
-                }
+                encoder.Args = $@"--avhw --input ""{StreamPath}"" --output-res {_resolution}x-2 --sar 1:1 --vpp-resize lanczos --fps {_stream.FrameRate} --avsync forcecfr --codec h265 --profile main --level 5.1 --tier high --vbrhq {_bitrate} --preset quality --output-depth 8 --max-bitrate {_bitrate + (_bitrate / 3)} --qp-init 1 --vbr-quality 1 --lookahead 32 --gop-len {_stream.FrameRate * 10} --bframes 3 --ref 3 --weightp --nonrefp --bref-mode middle --aq --aq-temporal --mv-precision Q-pel --colorrange auto --colormatrix auto --colorprim auto --transfer auto --chromaloc auto --max-cll copy --master-display copy --atc-sei auto --aud --pic-struct --output ""{outputPath}""";
+                encoder.Convert(true, $"Processing video...");
                 _streamPath = outputPath;
                 _streamID = 0;
             }

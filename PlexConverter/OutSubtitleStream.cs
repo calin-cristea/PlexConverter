@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using MediaInfo.Model;
+using System;
 using System.IO;
 using System.Linq;
-using System.Text;
-using MediaInfo;
-using MediaInfo.Model;
 
 namespace PlexConverter
 {
@@ -32,27 +28,17 @@ namespace PlexConverter
         {
             Directory.CreateDirectory(ToolsConfig.TempPath);
             var outputPath = Path.Combine(ToolsConfig.TempPath, $"{_stream.StreamNumber}-subtitle.srt");
-            var encoderInfo = new ProcessStartInfo();
-            encoderInfo.FileName = ToolsConfig.FFmpegPath;
+            var encoder = new Converter();
+            encoder.Path = ToolsConfig.FFmpegPath;
             if (_needsProcessing)
             {
-                encoderInfo.Arguments = $@"-i ""{_streamPath}"" -map 0:{_stream.StreamNumber} -codec:s srt ""{outputPath}""";
+                encoder.Args = $@"-i ""{_streamPath}"" -map 0:{_stream.StreamNumber} -codec:s srt ""{outputPath}""";
             }
             else
             {
-                encoderInfo.Arguments = $@"-i ""{_streamPath}"" -map 0:{_stream.StreamNumber} -codec:s copy ""{outputPath}""";
+                encoder.Args = $@"-i ""{_streamPath}"" -map 0:{_stream.StreamNumber} -codec:s copy ""{outputPath}""";
             }
-            try
-            {
-                using (Process encoder = Process.Start(encoderInfo))
-                {
-                    encoder.WaitForExit();
-                }
-            }
-            catch
-            {
-                // errors
-            }
+            encoder.Convert(true, $"Processing subtitle {_stream.StreamPosition}...");
             _streamPath = outputPath;
             _streamID = 0;
         }

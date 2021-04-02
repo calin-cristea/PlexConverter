@@ -59,7 +59,7 @@ namespace PlexConverter
         };
         public static string GetCode(string lang)
         {
-            return _langs.TryGetValue(lang, out string code) ? code : "";
+            return _langs.TryGetValue(lang, out string code) ? code : "und";
         }
     }
 }

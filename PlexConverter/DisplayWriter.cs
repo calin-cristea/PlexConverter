@@ -46,7 +46,7 @@ namespace PlexConverter
         }
         private static void DisplayAudioInfo(AudioStream audioStream)
         {
-            DisplayMessage($"   codec:      {audioStream.Codec}");
+            DisplayMessage($"   codec:      {audioStream.Format}");
             DisplayMessage($"   lang:       {audioStream.Language}");
             DisplayMessage($"   channels:   {audioStream.AudioChannelsFriendly}");
             DisplayMessage($"   samplerate: {audioStream.SamplingRate} Hz");
@@ -54,7 +54,7 @@ namespace PlexConverter
         }
         private static void DisplaySubtitleInfo(MediaInfo.Model.SubtitleStream subtitleStream)
         {
-            DisplayMessage($"   codec:      {subtitleStream.Codec}");
+            DisplayMessage($"   codec:      {subtitleStream.Format}");
             DisplayMessage($"   lang:       {subtitleStream.Language}");
         }
     }
