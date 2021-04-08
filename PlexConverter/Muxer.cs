@@ -23,7 +23,6 @@ namespace PlexConverter
             {
                 ConvertToMP4();
             }
-            Directory.Delete(ToolsConfig.TempPath, true);
         }
         private void ConvertToMP4()
         {
@@ -45,7 +44,7 @@ namespace PlexConverter
             foreach (SubtitleStream subtitleStream in _mediaFile.SubtitleStreams)
             {
                 var outSubtitleStream = new OutSubtitleStream(subtitleStream, _mediaFile.MediaPath);
-                var handler = outSubtitleStream.Codec == SubtitleCodec.Vobsub ? "subp" : "sbtl";
+                var handler = outSubtitleStream.Codec == "VobSub" || outSubtitleStream.Codec == "PGS" ? "subp" : "sbtl";
                 muxer.Args += $@" -add ""{outSubtitleStream.StreamPath}""#{outSubtitleStream.ID + 1}:hdlr={handler}:name=SubtitleHandler:lang={outSubtitleStream.Lang}:group=2:disable";
             }
             muxer.Args += $@" -fps {outVideoStream.Framerate} ""{outputPath}""";

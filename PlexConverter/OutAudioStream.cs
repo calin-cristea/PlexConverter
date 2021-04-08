@@ -57,7 +57,7 @@ namespace PlexConverter
                 var encoder = new Converter();
                 encoder.Path = ToolsConfig.FFmpegPath;
                 encoder.Args = $@"-i ""{_streamPath}"" -map 0:{_stream.StreamNumber} -codec:a {_codec} -b:a {_bitrate}k -ac {_channels} -ar {_stream.SamplingRate} ""{outputPath}""";
-                encoder.Convert(true, $"Processing audio {_stream.StreamPosition}...");
+                encoder.Convert(true, $"Processing audio {_stream.StreamPosition + 1}...");
                 _streamPath = outputPath;
                 _streamID = 0;
 

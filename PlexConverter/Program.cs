@@ -22,6 +22,8 @@ namespace PlexConverter
             muxer.Convert();
             DisplayWriter.DisplayMessage("Press any key to exit ...", ConsoleColor.Green);
             Console.ReadKey();
+            Directory.Delete(ToolsConfig.TempPath, true);
+            Environment.Exit(0);
         }
     }
 }

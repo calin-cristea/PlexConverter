@@ -11,6 +11,8 @@ namespace PlexConverter
         public static string NVEncCPath { get => GetPath("NVEncC64"); }
         public static string Mp4boxPath { get => GetPath("mp4box"); }
         public static string MkvMergePath { get => GetPath("mkvmerge"); }
+        public static string MkvExtractPath { get => GetPath("mkvextract"); }
+        public static string Bdsup2subPath { get => GetPath("bdsup2sub++"); }
         private static string GetPath(string bin)
         {
             var binName = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? $"{bin}.exe" : bin;

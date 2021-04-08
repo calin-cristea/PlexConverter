@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 
 namespace PlexConverter
 {
@@ -13,6 +14,7 @@ namespace PlexConverter
             {
                 using (Process process = new Process())
                 {
+                    Console.WriteLine();
                     DisplayWriter.DisplayMessage(message, ConsoleColor.Green);
                     process.StartInfo.FileName = Path;
                     process.StartInfo.Arguments = Args;
@@ -25,6 +27,8 @@ namespace PlexConverter
                     if (process.ExitCode > 0)
                     {
                         DisplayWriter.DisplayMessage($"Error {process.ExitCode}", ConsoleColor.Red);
+                        Directory.Delete(ToolsConfig.TempPath, true);
+                        Environment.Exit(1);
                     }
                     else
                     {
@@ -35,6 +39,7 @@ namespace PlexConverter
             catch
             {
                 // errors
+                throw;
             }
         }
     }
